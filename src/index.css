@@ -1,0 +1,169 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Vintage monitor frame (bezel + screen) */
+.vintage-frame{
+  --bezel-color: #e6dccb; /* light beige */
+  --bezel-dark: #cfc3ad;
+  --glass-reflect: rgba(255,255,255,0.12);
+  background: linear-gradient(180deg, var(--bezel-color), #e0d6c2);
+  border-radius: 18px;
+  padding: 14px; /* inner padding acting as bezel */
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25),
+              inset 0 -6px 18px rgba(0,0,0,0.06),
+              inset 2px 0 5px rgba(0,0,0,0.1);
+  border: 6px solid var(--bezel-dark);
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: visible;
+}
+
+/* inner screen area (glass) */
+.vintage-frame .vintage-screen{
+  background: linear-gradient(180deg, #0b0b0b, #1b1b1b);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 6px 20px rgba(0,0,0,0.6);
+}
+
+/* subtle green tint + scanlines can be adjusted */
+.scanlines{
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,0.02) 0px,
+    rgba(255,255,255,0.02) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+/* glass reflection */
+.vintage-frame .vintage-screen::before{
+  content: "";
+  position: absolute;
+  left: -20%;
+  top: -10%;
+  width: 60%;
+  height: 50%;
+  transform: rotate(-18deg);
+  background: linear-gradient(90deg, rgba(255,255,255,0.18), rgba(255,255,255,0.02));
+  filter: blur(6px);
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* power LED (small round indicator) */
+.power-led{
+  position: absolute;
+  right: 18px;
+  bottom: 28px;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: #4b5563;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.06);
+  z-index: 25;
+}
+.power-led.on{ background: #10b981; box-shadow: 0 0 6px rgba(16,185,129,0.9); }
+.power-led.off{ background: #ef4444; box-shadow: 0 0 6px rgba(239,68,68,0.9); }
+
+/* power button */
+.power-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: linear-gradient(180deg, var(--bezel-color), var(--bezel-dark));
+  border: 2px solid var(--bezel-dark);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.power-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* color handled by icon classes */
+.power-btn.off {
+  opacity: 0.95;
+}
+
+.power-btn:hover {
+  transform: translateY(-50%) scale(1.02);
+  filter: brightness(1.03);
+}
+
+.power-btn:active {
+  transform: translateY(-50%) scale(0.98);
+}
+
+/* subtle speaker grille on the lower-right bezel */
+.vintage-frame::after{
+  content: "";
+  position: absolute;
+  right: 10px;
+  bottom: -8px;
+  width: 68px;
+  height: 18px;
+  background-image: linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px);
+  background-size: 4px 4px;
+  transform: translateY(4px);
+  border-radius: 4px;
+  opacity: 0.9;
+}
+
+/* monitor base (small decorative shadow/ledge) */
+.monitor-base{
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: -18px;
+  height: 12px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.22));
+  border-radius: 6px;
+  filter: blur(2px);
+  z-index: 5;
+}
+
+/* power button */
+
+/* dark mode adjustments */
+.dark .vintage-frame{
+  --bezel-color: #3b3b3b;
+  --bezel-dark: #2a2a2a;
+  background: linear-gradient(180deg, #3b3b3b, #2e2e2e);
+  border-color: #1f1f1f;
+}
+.dark .power-btn{ filter: brightness(0.9); }
+
+/* responsive: make bezel thinner on small screens */
+@media (max-width: 640px){
+  .vintage-frame{ padding: 8px; border-radius: 12px; border-width: 4px; }
+  .power-btn{ width:30px; height:30px; right:8px; top:50%; transform: translateY(-50%); }
+  .power-led{ right:14px; bottom:18px; width:8px; height:8px }
+  .vintage-frame::after{ width:48px; height:12px; right:8px }
+}
+
+@media (min-width: 768px){
+  .vintage-frame{ padding:18px; border-radius:22px }
+  .power-btn{ right:22px; top:50%; transform: translateY(-50%); }
+}
